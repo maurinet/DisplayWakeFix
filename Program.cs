@@ -96,7 +96,6 @@ namespace DisplayWakeFix
         }
 
         Dictionary<IntPtr, WINDOWPLACEMENT> lastGoodLayout = new Dictionary<IntPtr, WINDOWPLACEMENT>();
-        System.Windows.Forms.Timer snapshotTimer;
         NotifyIcon trayIcon;
         bool displayCurrentlyOn = true;
 
@@ -125,12 +124,6 @@ namespace DisplayWakeFix
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("Exit", null, (s, e) => { trayIcon.Visible = false; Application.Exit(); });
             trayIcon.ContextMenuStrip = menu;
-
-            // snapshot window positions every 5 minutes while displays are on
-            snapshotTimer = new System.Windows.Forms.Timer();
-            snapshotTimer.Interval = 300000;
-            snapshotTimer.Tick += (s, e) => SnapshotLayout();
-            snapshotTimer.Start();
 
             RegisterPowerSettingNotification(this.Handle, ref GUID_CONSOLE_DISPLAY_STATE, DEVICE_NOTIFY_WINDOW_HANDLE);
         }
