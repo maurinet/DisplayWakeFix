@@ -33,10 +33,16 @@ treats the symptom:
 1. **Watches for the display power state change** using the
    `GUID_CONSOLE_DISPLAY_STATE` power setting notification, so it knows the
    instant your monitors go off, and the instant they come back on.
-2. **Keeps a rolling snapshot** of where every visible window lives, taken
-   periodically while the display is on (every 5 minutes by default), so
-   there's always a recent "known good" layout to restore, even though the
-   driver hang can't be predicted in advance.
+2. **Snapshots where every visible window lives the instant it detects the
+   displays turning off**, right as the on-to-off transition happens. An
+   earlier version of this app took that snapshot periodically (every 5
+   minutes) while the display was on, but that had a subtle bug: if a
+   driver hang or window shuffle happened *while the screens were already
+   off* (which can last anywhere from a minute to overnight), the next
+   periodic snapshot would capture that already-corrupted layout and
+   silently overwrite the last good one. Snapshotting only at the
+   on-to-off transition guarantees the saved layout is always the correct
+   "before" state, never one captured during the window of vulnerability.
 3. **On wake, automatically sends `Ctrl+Win+Shift+B` itself.** No more
    reaching for the keyboard shortcut by hand.
 4. **A few seconds later, restores every window to its saved position and
