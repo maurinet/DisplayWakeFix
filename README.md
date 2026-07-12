@@ -7,6 +7,7 @@ forcing a GPU driver reset with `Ctrl+Win+Shift+B`, and once that happens,
 every open window has usually been scattered across the wrong monitors.
 
 DisplayWakeFix automates both parts of that annoyance.
+Fix windows restoring to the wrong screen after system wake up.
 
 ## The problem
 
