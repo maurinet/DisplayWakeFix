@@ -121,6 +121,8 @@ namespace DisplayWakeFix
             trayIcon.Text = "Display Wake Fix";
             var menu = new ContextMenuStrip();
             menu.Items.Add("Restore windows now", null, (s, e) => RestoreLayout());
+            menu.Items.Add("by |¥|@µ®¡", null, (s, e) => System.Diagnostics.Process.Start("https://mauweb.net"));
+            menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("Exit", null, (s, e) => { trayIcon.Visible = false; Application.Exit(); });
             trayIcon.ContextMenuStrip = menu;
 
