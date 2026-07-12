@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- monitor frame -->
+  <rect x="32" y="48" width="448" height="304" rx="24" fill="none" stroke="black" stroke-width="28"/>
+
+  <!-- stand -->
+  <rect x="234" y="352" width="44" height="64" fill="black"/>
+  <rect x="176" y="416" width="160" height="28" rx="14" fill="black"/>
+
+  <!-- map roads inside the screen -->
+  <path d="M 70 300 L 160 220 L 240 260 L 320 180 L 440 210"
+        fill="none" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
+  <path d="M 90 120 L 180 170 L 260 130 L 360 160"
+        fill="none" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
+
+  <!-- location pin, centered on the screen -->
+  <path d="M 256 96
+           C 196 96 156 138 156 190
+           C 156 256 256 320 256 320
+           C 256 320 356 256 356 190
+           C 356 138 316 96 256 96 Z"
+        fill="black"/>
+  <circle cx="256" cy="188" r="38" fill="white"/>
+</svg>
