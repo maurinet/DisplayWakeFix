@@ -58,6 +58,9 @@ manual restore or exit.
 
 ```powershell
 git clone https://github.com/maurinet/DisplayWakeFix.git
+
+Run the build.bat file or build manually:
+
 cd DisplayWakeFix
 dotnet publish -c Release -r win-x64 --self-contained false -o dist
 ```
