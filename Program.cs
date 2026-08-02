@@ -120,6 +120,7 @@ namespace DisplayWakeFix
             trayIcon.Text = "Display Wake Fix";
             var menu = new ContextMenuStrip();
             menu.Items.Add("Restore windows now", null, (s, e) => RestoreLayout());
+            menu.Items.Add("Move all windows to main screen", null, (s, e) => MoveAllWindowsToPrimary());
             menu.Items.Add("by |¥|@µ®¡", null, (s, e) => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("https://mauweb.net") { UseShellExecute = true }));
             menu.Items.Add(new ToolStripSeparator());
             menu.Items.Add("Exit", null, (s, e) => { trayIcon.Visible = false; Application.Exit(); });
@@ -234,6 +235,64 @@ namespace DisplayWakeFix
                         SWP_NOZORDER | SWP_NOACTIVATE);
                 }
             }
+        }
+
+        void MoveAllWindowsToPrimary()
+        {
+            Rectangle work = Screen.PrimaryScreen.WorkingArea;
+
+            int cascadeX = 0;
+            int cascadeY = 0;
+            const int cascadeStep = 32;
+
+            EnumWindows((hWnd, lParam) =>
+            {
+                if (!IsWindowVisible(hWnd) || GetWindowTextLength(hWnd) == 0)
+                    return true;
+
+                WINDOWPLACEMENT current = new WINDOWPLACEMENT();
+                current.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
+                if (!GetWindowPlacement(hWnd, ref current))
+                    return true;
+
+                // keep each window's existing size (clamped to fit the
+                // primary monitor), just relocate it there.
+                RECT normal = current.rcNormalPosition;
+                int width = Math.Min(normal.Right - normal.Left, work.Width);
+                int height = Math.Min(normal.Bottom - normal.Top, work.Height);
+                if (width <= 0) width = Math.Min(800, work.Width);
+                if (height <= 0) height = Math.Min(600, work.Height);
+
+                if (cascadeX + width > work.Width) cascadeX = 0;
+                if (cascadeY + height > work.Height) cascadeY = 0;
+
+                int x = work.X + cascadeX;
+                int y = work.Y + cascadeY;
+
+                WINDOWPLACEMENT target = current;
+                target.rcNormalPosition = new RECT
+                {
+                    Left = x,
+                    Top = y,
+                    Right = x + width,
+                    Bottom = y + height
+                };
+
+                SetWindowPlacement(hWnd, ref target);
+
+                // if it's currently visible on-screen (not minimized), also
+                // move it directly so it snaps over immediately.
+                if (current.showCmd != SW_SHOWMINIMIZED)
+                {
+                    SetWindowPos(hWnd, IntPtr.Zero, x, y, width, height,
+                        SWP_NOZORDER | SWP_NOACTIVATE);
+                }
+
+                cascadeX += cascadeStep;
+                cascadeY += cascadeStep;
+
+                return true;
+            }, IntPtr.Zero);
         }
     }
 }
