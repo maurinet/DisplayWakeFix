@@ -258,6 +258,32 @@ namespace DisplayWakeFix
                 // keep each window's existing size (clamped to fit the
                 // primary monitor), just relocate it there.
                 RECT normal = current.rcNormalPosition;
+
+                // figure out which monitor this window currently lives on.
+                // for a minimized window, its on-screen rect is just the
+                // taskbar icon area, not meaningful, so use rcNormalPosition
+                // (the "restores to" rect) instead in that case.
+                Rectangle testRect;
+                if (current.showCmd == SW_SHOWMINIMIZED)
+                {
+                    testRect = new Rectangle(normal.Left, normal.Top,
+                        normal.Right - normal.Left, normal.Bottom - normal.Top);
+                }
+                else
+                {
+                    RECT liveRect;
+                    if (GetWindowRect(hWnd, out liveRect))
+                        testRect = new Rectangle(liveRect.Left, liveRect.Top,
+                            liveRect.Right - liveRect.Left, liveRect.Bottom - liveRect.Top);
+                    else
+                        testRect = new Rectangle(normal.Left, normal.Top,
+                            normal.Right - normal.Left, normal.Bottom - normal.Top);
+                }
+
+                // already on the main screen: leave it exactly where it is.
+                if (testRect.Width > 0 && testRect.Height > 0 && Screen.FromRectangle(testRect).Primary)
+                    return true;
+
                 int width = Math.Min(normal.Right - normal.Left, work.Width);
                 int height = Math.Min(normal.Bottom - normal.Top, work.Height);
                 if (width <= 0) width = Math.Min(800, work.Width);

@@ -83,11 +83,13 @@ Double-click `DisplayWakeFix.exe`. It has no visible window, only a tray
 icon. Right-click the tray icon for:
 
 - **Restore windows now** — manually reapply the last saved layout
-- **Move all windows to main screen** — relocate every open window
-  (including minimized ones) onto your primary monitor, each keeping its
-  original size and cascaded slightly so they don't fully overlap. Handy
-  any time your windows end up scattered for reasons unrelated to the
-  sleep/wake bug too, e.g. after unplugging a monitor.
+- **Move all windows to main screen** — relocate every open window that
+  is currently on a *different* monitor onto your primary one (each
+  keeping its original size and cascaded slightly so they don't fully
+  overlap), including minimized windows. Windows already on the primary
+  monitor are left exactly where they are. This is meant for exactly the
+  situation where your secondary screens are off or unresponsive and you
+  can't easily drag a window back yourself.
 - **Exit**
 
 ### Run automatically at login
